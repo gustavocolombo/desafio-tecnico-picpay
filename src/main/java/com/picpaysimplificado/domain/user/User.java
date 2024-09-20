@@ -6,6 +6,8 @@ import java.util.UUID;
 
 import org.hibernate.annotations.CreationTimestamp;
 
+import com.picpaysimplificado.dtos.CreateUserDTO;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -47,4 +49,14 @@ public class User {
 
   @CreationTimestamp
   private LocalDateTime createdAt;
+
+  public User(CreateUserDTO userDTO) {
+    this.firstname = userDTO.firstname();
+    this.lastname = userDTO.lastname();
+    this.email = userDTO.email();
+    this.password = userDTO.password();
+    this.document = userDTO.document();
+    this.balance = userDTO.balance();
+    this.userType = userDTO.userType();
+  }
 }
