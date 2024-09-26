@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.picpaysimplificado.domain.user.User;
-import com.picpaysimplificado.dtos.NotificationRequestDTO;
+import com.picpaysimplificado.dtos.notification.NotificationRequestDTO;
 
 @Service
 public class NotificationService {
@@ -20,7 +20,7 @@ public class NotificationService {
 
     ResponseEntity<String> response = restTemplate.postForEntity("https://util.devi.tools/api/v1/notify", notificationRequest, String.class);
 
-    if(!(response.getStatusCode() == HttpStatus.OK)) {
+    if(!(response.getStatusCode() == HttpStatus.NO_CONTENT)) {
       throw new Exception("Notification Service is offline");
     }
   }
