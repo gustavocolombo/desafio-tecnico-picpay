@@ -7,6 +7,7 @@ import java.util.UUID;
 import org.hibernate.annotations.CreationTimestamp;
 
 import com.picpaysimplificado.domain.user.User;
+import com.picpaysimplificado.dtos.transaction.TransactionEntityDTO;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -18,6 +19,7 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity(name = "transactions")
@@ -25,6 +27,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 @EqualsAndHashCode(of = "id")
 public class Transaction {
   @Id
@@ -43,4 +46,10 @@ public class Transaction {
 
   @CreationTimestamp
   private LocalDateTime createdAt;
+
+  public Transaction(TransactionEntityDTO transactionEntityDTO) {
+    this.amount = transactionEntityDTO.amount();
+    this.sender = transactionEntityDTO.sender();
+    this.receiver = transactionEntityDTO.receiver();
+  }
 }
