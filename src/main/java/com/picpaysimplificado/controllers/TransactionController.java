@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.picpaysimplificado.domain.transaction.Transaction;
-import com.picpaysimplificado.dtos.transaction.TransactionDTO;
+import com.picpaysimplificado.dtos.transaction.TransactionRequestDTO;
 import com.picpaysimplificado.services.TransactionService;
 
 @RestController
@@ -19,7 +19,7 @@ public class TransactionController {
   private TransactionService transactionService;
 
   @PostMapping("/")
-  public ResponseEntity createTransaction(@RequestBody TransactionDTO transactioDTO) throws Exception{
+  public ResponseEntity createTransaction(@RequestBody TransactionRequestDTO transactioDTO) throws Exception{
       Transaction transaction = this.transactionService.createTransaction(transactioDTO);
 
       return ResponseEntity.status(HttpStatus.OK).body(transaction);

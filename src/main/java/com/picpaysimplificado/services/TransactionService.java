@@ -7,11 +7,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import com.picpaysimplificado.domain.transaction.Transaction;
 import com.picpaysimplificado.domain.user.User;
-import com.picpaysimplificado.dtos.transaction.TransactionDTO;
+import com.picpaysimplificado.dtos.transaction.TransactionEntityDTO;
+import com.picpaysimplificado.dtos.transaction.TransactionRequestDTO;
+import com.picpaysimplificado.dtos.transaction.ValidateTransactionDTO;
 import com.picpaysimplificado.repositories.TransactionRepository;
 
 @Service
@@ -27,21 +32,20 @@ public class TransactionService {
 
   @Autowired
   private NotificationService notificationService;
-  
-  public Transaction createTransaction(TransactionDTO transaction) throws Exception{
+
+  @Transactional(readOnly = false, propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED)
+  public Transaction createTransaction(TransactionRequestDTO transaction) throws Exception{
     User sender = this.userService.findById(transaction.senderId());
     User receiver =  this.userService.findById(transaction.receiverId());
 
-    this.userService.validateTransaction(sender, transaction.amount());
+    ValidateTransactionDTO validateTransaction = new ValidateTransactionDTO(sender, receiver, transaction.amount());
+    this.userService.validateTransaction(validateTransaction);
 
     boolean isAuthorized = this.authorizeTransaction(sender, transaction.amount());
-
     if(!isAuthorized) throw new Exception("Transaction not allowed");
 
-    Transaction newTransaction = new Transaction();
-    newTransaction.setSender(sender);
-    newTransaction.setReceiver(receiver); 
-    newTransaction.setAmount(transaction.amount());
+    TransactionEntityDTO newTransactionEntity = new TransactionEntityDTO(transaction.amount(), sender, receiver);
+    Transaction newTransaction = new Transaction(newTransactionEntity);
 
     sender.setBalance(sender.getBalance().subtract(transaction.amount()));
     receiver.setBalance(receiver.getBalance().add(transaction.amount()));
