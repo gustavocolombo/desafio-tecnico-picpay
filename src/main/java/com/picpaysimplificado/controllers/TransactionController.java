@@ -10,13 +10,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.picpaysimplificado.domain.transaction.Transaction;
 import com.picpaysimplificado.dtos.transaction.TransactionRequestDTO;
-import com.picpaysimplificado.services.TransactionService;
+import com.picpaysimplificado.services.implementation.TransactionServiceImplementation;
 
 @RestController
 @RequestMapping("/transactions")
 public class TransactionController {
   @Autowired
-  private TransactionService transactionService;
+  private TransactionServiceImplementation transactionService;
 
   @PostMapping("/")
   public ResponseEntity createTransaction(@RequestBody TransactionRequestDTO transactioDTO) throws Exception{
