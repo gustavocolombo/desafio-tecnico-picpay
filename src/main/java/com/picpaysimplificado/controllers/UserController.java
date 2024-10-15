@@ -10,13 +10,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.picpaysimplificado.domain.user.User;
 import com.picpaysimplificado.dtos.user.CreateUserDTO;
-import com.picpaysimplificado.services.UserService;
+import com.picpaysimplificado.services.implementation.UserServiceImplementation;
 
 @RestController
 @RequestMapping("/users")
 public class UserController {
   @Autowired
-  private UserService userService;
+  private UserServiceImplementation userService;
 
   @PostMapping("/")
   public ResponseEntity createUser(@RequestBody CreateUserDTO createUserDTO) {
