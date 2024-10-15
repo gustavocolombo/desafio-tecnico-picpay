@@ -12,7 +12,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.picpaysimplificado.domain.user.User;
 import com.picpaysimplificado.repositories.UserRepository;
-import com.picpaysimplificado.services.TokenService;
+import com.picpaysimplificado.services.implementation.TokenServiceImplementation;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -23,7 +23,7 @@ import jakarta.servlet.http.HttpServletResponse;
 public class SecurityFilter extends OncePerRequestFilter{
 
   @Autowired
-  private TokenService tokenService;
+  private TokenServiceImplementation tokenService;
 
   @Autowired
   private UserRepository userRepository;

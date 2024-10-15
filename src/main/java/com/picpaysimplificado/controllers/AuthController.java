@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.picpaysimplificado.domain.user.User;
 import com.picpaysimplificado.dtos.user.LoginRequestDTO;
-import com.picpaysimplificado.services.TokenService;
-import com.picpaysimplificado.services.UserService;
+import com.picpaysimplificado.services.implementation.TokenServiceImplementation;
+import com.picpaysimplificado.services.implementation.UserServiceImplementation;
 
 import jakarta.persistence.EntityNotFoundException;
 
@@ -23,10 +23,10 @@ public class AuthController {
   private PasswordEncoder passwordEncoder;
 
   @Autowired
-  private UserService userService;
+  private UserServiceImplementation userService;
 
   @Autowired
-  private TokenService tokenService;
+  private TokenServiceImplementation tokenService;
 
   @PostMapping("/login")
   public ResponseEntity login(@RequestBody LoginRequestDTO loginRequestDTO) {

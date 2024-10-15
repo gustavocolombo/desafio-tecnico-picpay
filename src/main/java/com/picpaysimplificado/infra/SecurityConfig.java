@@ -14,7 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.picpaysimplificado.services.CustomUserDetailsService;
+import com.picpaysimplificado.services.implementation.CustomUserDetailsService;
 
 @Configuration
 @EnableWebSecurity
