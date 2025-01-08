@@ -57,6 +57,37 @@ class UserRepositoryTest {
         assertThat(notFoundedUser.isEmpty()).isTrue();
     }
 
+    @Test
+    @DisplayName("it should be able return a user by email from database")
+    void findByEmailWithSuccess () {
+        CreateUserDTO userTest = new CreateUserDTO(
+                "John",
+                "Doe",
+                "johndoe@gmail.com",
+                "password",
+                "99999999901",
+                UserType.COMMON,
+                new BigDecimal(10)
+        );
+
+        this.createUser(userTest);
+
+        Optional<User> userFounded = this.userRepository.findByEmail(userTest.email());
+
+        assertThat(userFounded.isPresent()).isTrue();
+    }
+
+    @Test
+    @DisplayName("it should not be able a return user by email from database")
+    void findByEmailWithError() {
+        String email = "johndoe@gmail.com";
+
+        Optional<User> notFoundedUser = this.userRepository.findByEmail(email);
+
+        assertThat(notFoundedUser.isEmpty()).isTrue();
+    }
+
+
     private User createUser(CreateUserDTO data) {
         User newUser = new User(data);
         entityManager.persist(newUser);
