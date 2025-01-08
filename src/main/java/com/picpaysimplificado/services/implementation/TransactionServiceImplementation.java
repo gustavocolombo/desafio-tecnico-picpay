@@ -1,16 +1,10 @@
 package com.picpaysimplificado.services.implementation;
 
-import java.math.BigDecimal;
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
 
 import com.picpaysimplificado.domain.transaction.Transaction;
 import com.picpaysimplificado.domain.user.User;
@@ -29,10 +23,10 @@ public class TransactionServiceImplementation implements TransactionService{
   private TransactionRepository transactionRepository;
 
   @Autowired
-  private RestTemplate restTemplate;
+  private NotificationServiceImplementation notificationService;
 
   @Autowired
-  private NotificationServiceImplementation notificationService;
+  private AuthorizationServiceImplementation authorizationService;
 
   @Override
   @Transactional(readOnly = false, propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED)
@@ -43,7 +37,7 @@ public class TransactionServiceImplementation implements TransactionService{
     ValidateTransactionDTO validateTransaction = new ValidateTransactionDTO(sender, receiver, transaction.amount());
     this.userService.validateTransaction(validateTransaction);
 
-    boolean isAuthorized = this.authorizeTransaction(sender, transaction.amount());
+    boolean isAuthorized = this.authorizationService.authorizeTransaction(sender, transaction.amount());
     if(!isAuthorized) throw new Exception("Transaction not allowed");
 
     TransactionEntityDTO newTransactionEntity = new TransactionEntityDTO(transaction.amount(), sender, receiver);
@@ -60,15 +54,5 @@ public class TransactionServiceImplementation implements TransactionService{
     this.notificationService.sendNotification(receiver, "Transaction received successfully");
 
     return newTransaction;
-  }
-
-  @Override
-  public boolean authorizeTransaction(User sender, BigDecimal amount) {
-    ResponseEntity<Map> response= restTemplate.getForEntity("https://util.devi.tools/api/v2/authorize", Map.class);
-    
-    if(response.getStatusCode() == HttpStatus.OK) {
-      String message = (String) response.getBody().get("status");
-      return "success".equalsIgnoreCase(message);
-    } else return false;
   }
 }
